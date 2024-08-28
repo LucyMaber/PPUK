@@ -22,10 +22,15 @@ const Footer = () => {
               <a rel="me" href="https://tech.lgbt/@pirate_party_uk" className="social-link me-3" title="Follow us on Mastodon">
                 <FaMastodon size={24} className="text-light" />
               </a>
-              <a rel="me" href="https://twitter.com/_PiratePartyUK" className="social-link" title="Follow us on Twitter">
+              <a rel="me" href="https://twitter.com/_PiratePartyUK" className="social-link me-3" title="Follow us on Twitter">
                 <FaTwitter size={24} className="text-light" />
               </a>
             </div>
+          </Col>
+          <Col md={4} className="text-center text-md-end">
+            <a href="/privacy-policy.html" className="text-light me-3" title="Privacy Policy">
+              Privacy Policy
+            </a>
           </Col>
         </Row>
       </Container>

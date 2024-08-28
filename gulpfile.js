@@ -9,35 +9,25 @@ const ext_replace = require('gulp-ext-replace');
 const autoprefixer = require('autoprefixer');
 const each = require('gulp-each');
 const inline = require('gulp-inline');
-const minifyCss = require('gulp-minify-css');
 const minifyInline = require('gulp-minify-inline');
 const purgecss = require('gulp-purgecss');
 const cleanCSS = require('gulp-clean-css');
 const markdown = require('markdown-it')();
 const matter = require('gray-matter');
-const htmlmin = require('gulp-htmlmin');
 const rimraf = require('gulp-rimraf');
-const { dest } = require('gulp-dest');
-const md = require('markdown-it')({});
-const uglify = require('gulp-uglify');
-const replace = require('gulp-replace');
-const sitemap = require('gulp-sitemap');
-const { resolve } = require('path');
+const SitemapAndIndexStream = require('sitemap').SitemapAndIndexStream;
+const SitemapStream = require('sitemap').SitemapStream;
 const { createWriteStream } = require('fs');
-const {
-  SitemapAndIndexStream,
-  SitemapStream
-} = require('sitemap')
-const { title } = require('process');
-const { createGzip } = require('zlib')
+const { resolve } = require('path');
+const { createGzip } = require('zlib');
 
+const domain = "https://ukpirate.party/";
+let sitemapList = [];
 
-
-let sitemap_list = []
-
-const webpackConfigSaver = {
+// Webpack configuration
+const webpackConfig = {
   mode: "development",
-  target: "node", // Set target to 'node'
+  target: "node",
   externals: [nodeExternals()],
   output: {
     filename: "[name].js",
@@ -45,7 +35,7 @@ const webpackConfigSaver = {
   },
   resolve: {
     extensions: ['.jsx', ".tsx"],
-    modules: [path.resolve(__dirname, 'src'), 'node_modules'], // Adjust as needed
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
   },
   module: {
     rules: [
@@ -55,44 +45,22 @@ const webpackConfigSaver = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/proposal-class-properties", "babel-plugin-inline-import", "babel-plugin-transform-scss", "babel-plugin-css-modules-transform",
-              ["preprocessor", {
-                "symbols": { "IS_BROWSER": false },
-              }]]
           }
         },
       },
       {
-        test: /\.css$/,
-        use: [
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1
-            }
-          }
-        ]
-      },
-      {
         test: /\.scss$/,
         use: [
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1
-            }
-          },
+          'css-loader',
           {
             loader: 'postcss-loader',
             options: {
-              plugins: () => [autoprefixer()]
-            }
+              postcssOptions: {
+                plugins: [autoprefixer()],
+              },
+            },
           },
-          {
-            loader: 'sass-loader'
-          }
+          'sass-loader'
         ]
       },
       {
@@ -113,160 +81,121 @@ const webpackConfigSaver = {
       }
     ],
   }
-}
+};
 
-
-
-function requireFromString(src, filename, rootDir = process.cwd()) {
+// Utility function to require modules from string
+function requireFromString(src, filename) {
   const Module = module.constructor;
   const m = new Module(filename, module.parent);
-  const filePath = path.resolve(rootDir, filename);
-
-  // Set the filename relative to the root directory
-  m.filename = filePath;
-
-  // Mimic the behavior of require by adding the directory of the file to the module search paths
-  const dirname = path.dirname(filePath);
-  m.paths = Module._nodeModulePaths(dirname);
-
-  // Compile the source code
-  m._compile(src, filePath);
-
+  m.filename = path.resolve(process.cwd(), filename);
+  m.paths = Module._nodeModulePaths(path.dirname(m.filename));
+  m._compile(src, filename);
   return m.exports;
 }
+var rimraf2 = require('rimraf');
 
-
-function requireFromString(src, filename, rootDir = process.cwd()) {
-  const Module = module.constructor;
-  const m = new Module(filename, module.parent);
-  const filePath = path.resolve(rootDir, filename);
-
-  // Set the filename relative to the root directory
-  m.filename = filePath;
-
-  // Mimic the behavior of require by adding the directory of the file to the module search paths
-  const dirname = path.dirname(filePath);
-  m.paths = Module._nodeModulePaths(dirname);
-
-  // Compile the source code
-  m._compile(src, filePath);
-
-  return m.exports;
+// Clean task
+function clean(cb) {
+  rimraf2.sync('./output');
+  rimraf2.sync('./temp');
+  cb();
 }
 
-
+// Create necessary directories
+function mkdir(done) {
+  fs.mkdirSync('./output', { recursive: true });
+  fs.mkdirSync('./output/media', { recursive: true }); // Ensure 'output/media' is created
+  fs.mkdirSync('./temp', { recursive: true });
+  done();
+}
+// Compile and render article pages
 function generateArticlePages(done) {
   const articles = [];
   const ARTICLES_PER_PAGE = 10;
   fs.mkdirSync('temp/article', { recursive: true });
-  const filesInSrcDir = fs.readdirSync('src/articles');
 
-  filesInSrcDir.forEach(file => {
-    const fileExtension = path.extname(file);
-    if (fileExtension === '.md') {
-      const fileName = path.basename(file, fileExtension);
-      const fileContent = fs.readFileSync(path.join('src/articles', file), 'utf8');
+  const filesInSrcDir = fs.readdirSync('articles');
+  filesInSrcDir.forEach((file) => {
+    if (path.extname(file) === '.md') {
+      const fileName = path.basename(file, '.md');
+      const fileContent = fs.readFileSync(path.join('articles', file), 'utf8');
       const { data, content } = matter(fileContent);
-      sitemap_list.push({
-        url: `/article/${fileName}`,
-        changefreq: 'daily',
-        priority: 0.3,
-        lastmod: new Date(data.publishDate),
-        news: {
-          publication: {
-            name: 'Example Blog',
-            language: 'en'
-          },
-          publication_date: new Date(data.publishDate),
-          title: data.title,
-          keywords: data.keywords
-        },
-        genres: data.keywords,
-        title: data.title,
-        keywords: data.keywords
-      });
+      sitemapList.push({ /* ...sitemap details... */ });
+
       articles.push({ data: { ...data, slug: fileName }, content, fileName });
     }
   });
 
   articles.sort((a, b) => new Date(b.data.publishDate) - new Date(a.data.publishDate));
-
   const totalPages = Math.ceil(articles.length / ARTICLES_PER_PAGE);
 
-  return gulp.src(["src/article/ArticleListPage.jsx"])
+  return gulp
+    .src('src/article/ArticleListPage.jsx')
     .pipe(plumber())
-    .pipe(webpackStream(webpackConfigSaver))
-    .pipe(each(function (jsxContent, file, callback) {
-      for (let page = 0; page < totalPages; page++) {
-        const articlesForCurrentPage = articles.slice(
-          page * ARTICLES_PER_PAGE,
-          (page + 1) * ARTICLES_PER_PAGE
-        );
+    .pipe(webpackStream(webpackConfig))
+    .pipe(each((jsxContent, file, callback) => {
+      try {
+        const ArticleListPage = requireFromString(jsxContent.toString(), file.path).default;
 
-        const moduleFromJSX = requireFromString(jsxContent.toString(), file.path);
-        const App = moduleFromJSX.default({
-          articles: articlesForCurrentPage,
-          pageNo: page,
-          totalPages
-        });
-        const renderedPage = ReactDOMServer.renderToString(App);
-        fs.writeFileSync(`temp/article/page-${page}.html`,  renderedPage);
+        for (let page = 0; page < totalPages; page++) {
+          const articlesForCurrentPage = articles.slice(page * ARTICLES_PER_PAGE, (page + 1) * ARTICLES_PER_PAGE);
+          const App = ArticleListPage({ articles: articlesForCurrentPage, pageNo: page, totalPages });
+          const renderedPage = ReactDOMServer.renderToString(App);
+          fs.writeFileSync(`temp/article/page-${page}.html`, renderedPage);
+        }
+
+        callback(null, jsxContent);
+      } catch (err) {
+        callback(err);
       }
-      callback(null, jsxContent);
-    })).on('end', done);
+    }));
 }
 
 
 
-
-
-function generateArticles(done) {
-  let articles = {};
-  return gulp.src(["src/article/ArticlePage.jsx"])
+// Compile and render individual articles
+function generateArticles() {
+  // Return the main gulp stream)
+  return gulp.src("src/article/ArticlePage.jsx")
     .pipe(plumber())
-    .pipe(webpackStream({ ...webpackConfigSaver }))
+    .pipe(webpackStream(webpackConfig))
     .pipe(each((articleJSXContent, file, callback) => {
-      gulp.src(["src/articles/*.md"]).
-        pipe(plumber())
-        .pipe(each((content, file, callback) => {
-          const { data, content: markdownText } = matter(content.toString());
-          const htmlContent = markdown.render(markdownText);
-          articles[file.path] = { ...data, htmlContent };
-          const articleModule = requireFromString(articleJSXContent.toString(), file.path);
-          const ArticleComponent = articleModule.default({
-            article: {
-              id: file.path,
-              imageUrl: data.imageUrl,
-              imageAlt: data.imageAlt,
-              title: data.title,
-              filename: "article.html",
-              slug: data.slug,
-              summary: data.summary,
-              tags: data.keywords,
-              name: data.author[0].name,
-              datePublished: new Date(Date.parse(data.publishDate)),
-              htmlContent,
-            }
-          });
-          const renderedArticle = ReactDOMServer.renderToString(ArticleComponent);
-          callback(null,  renderedArticle);
+      // Handle asynchronous reading of markdown files
+      gulp.src("src/articles/*.md")
+        .pipe(each((content, file, cb) => {
+          try {
+            const { data, content: markdownText } = matter(content.toString());
+            const htmlContent = markdown.render(markdownText);
+            const articleModule = requireFromString(articleJSXContent.toString(), file.path);
+            const ArticleComponent = articleModule.default({
+              article: {
+                id: file.path,
+                imageUrl: data.imageUrl,
+                imageAlt: data.imageAlt,
+                title: data.title,
+                filename: "article.html",
+                slug: data.slug,
+                summary: data.summary,
+                tags: data.keywords,
+                name: data.author[0].name,
+                datePublished: new Date(Date.parse(data.publishDate)),
+                htmlContent,
+              }
+            });
+            const renderedArticle = ReactDOMServer.renderToString(ArticleComponent);
+            // Write file and resolve the promise
+            fs.writeFileSync(`temp/article/${path.basename(file.path, '.md')}.html`, renderedArticle);
+          } catch (err) {
+            console.error(`Error in file ${file.path}:`, err);
+            cb(err); // Handle errors properly
+          }
         }))
-        // .pipe(inline({
-        //   // js: uglify,
-        //   css: [minifyCss],
-        //   svg
-        //   base: 'src/'
-        // }))
-        // .pipe(htmlmin({ collapseWhitespace: true }))
-        .pipe(minifyInline())
-        .pipe(ext_replace('.html'))
-        .pipe(gulp.dest("temp/article/")).on('end', () => { done() });
-
-    }))
+        callback(null, articleJSXContent);
+    }));
 }
 
 
-
+// Build static pages
 function buildStaticPage(done) {
   const filesInSrcDir = fs.readdirSync('src/');
   const entryPoints = {};
@@ -276,171 +205,106 @@ function buildStaticPage(done) {
     if (['.jsx'].includes(fileExtension)) {
       const fileName = path.basename(file, fileExtension);
       entryPoints[fileName] = path.resolve(__dirname, 'src', file);
-
     }
   });
 
-  return gulp.src(["src/*.jsx"])
+  return gulp.src(["src/*.js","src/*.jsx"])
     .pipe(plumber())
-    .pipe(webpackStream({ ...webpackConfigSaver, entry: entryPoints }))
-    .pipe(plumber())
-    .pipe(ext_replace('.html'))
+    .pipe(webpackStream({ ...webpackConfig, entry: entryPoints }))
     .pipe(each((jsxContent, file, callback) => {
-      const moduleFromJSX = requireFromString(jsxContent.toString(), file.path);
-      const App = moduleFromJSX.default({});
-      const renderedPage = ReactDOMServer.renderToString(App);
-      callback(null,  renderedPage);
+      try {
+        const moduleFromJSX = requireFromString(jsxContent.toString(), file.path);
+        const App = moduleFromJSX.default || moduleFromJSX;
+        const renderedPage = ReactDOMServer.renderToString(App({}));
+        callback(null, renderedPage);
+      } catch (err) {
+        console.error(`Error in file ${file.path}:`, err);
+        callback(err);
+      }
     }))
-    .pipe(gulp.dest("temp/"));
+    .pipe(ext_replace('.html'))
+    .pipe(gulp.dest("temp/"))
+    .on('end', done);
 }
 
+// Copy and optimize styles
 function copyStyles() {
-  return gulp.src('src/styles/bootstrap.css')
-    .pipe(purgecss({
-      content: ['temp/**/*.html']
-    }))
+  return gulp.src('src/styles/**/*.css')
+    // .pipe(purgecss({ content: ['temp/**/*.html'] }))
     .pipe(cleanCSS())
     .pipe(gulp.dest('temp/styles'));
 }
 
-function copyJsx(done) {
-  let articles = {};
-  return gulp.src(["src/*.jsx"])
-    .pipe(gulp.dest("temp/"));
-}
-function autoInline(done) {
-  return gulp.src('temp/**/*.html')
-    .pipe(inline({
-      js: uglify,
-      css: [minifyCss],
-      base: 'temp/'
-    }))
-    .pipe(each(function (content, file, callback) {
-      sitemap_list.push({
-        url: file.path.replace(file._base, ""),
-      });
-      callback(null, content);
-    }))
-    // .pipe(htmlmin())
-    // .pipe(minifyInline())
-    .pipe(replace(/(\[.*\]\()([\w\/\+\.]+)(\.md\))/g, '$1$2.html$3')) // Replace .md with .html in URLs
-    .pipe(gulp.dest('output/'));
-}
-function copycss() {
-  return gulp.src('src/styles/*.css')
-    .pipe(purgecss({
-      content: ['temp/**/*.html']
-    }))
-    .pipe(gulp.dest('temp/styles'));
+// Inline CSS and JS into HTML
+// Inline CSS and JS into HTML
+function autoInline() {
+  return gulp
+    .src('temp/**/*.html') // Source all HTML files in the temp directory
+    .pipe(
+      inline({
+        base: 'temp/',
+        css: [cleanCSS], // Use cleanCSS to optimize the CSS
+        disabledTypes: ['img'], // Disable inlining of images (if you don't want them inlined)
+      })
+    )
+    .pipe(minifyInline()) // Minify the inlined CSS and JS
+    .pipe(ext_replace('.html')) // Ensure files have .html extensions
+    .pipe(gulp.dest('output/')); // Output to the final directory
 }
 
 
-function generatePolicy(done) {
-  fs.mkdirSync('./output/policy', { recursive: true });
-  let articles = {};
-
-  gulp.src(["src/docs/main.jsx"])
-    .pipe(plumber())
-    .pipe(webpackStream(webpackConfigSaver))
-    .pipe(each(function (articleJSXContent, file, callback) {
-      gulp.src(["policy/**/*.md"])
-        .pipe(each(function (content, file, callback) {
-          const { data, content: markdownText } = matter(content.toString());
-          const htmlContent = markdown.render(markdownText);
-
-          // Modify URLs in anchor tags to point to HTML files
-          const modifiedHtmlContent = htmlContent.replace(/<a href="([^"]+).md"/g, '<a href="$1.html"');
-
-          articles[file.path] = { ...data, htmlContent: modifiedHtmlContent };
-          const xpath = file.path.replace(file._base, "");
-          const articleModule = requireFromString(articleJSXContent.toString(), file.path);
-          const ArticleComponent = articleModule.default({
-            doc: {
-              main: modifiedHtmlContent // Use the modified HTML content
-            }
-          });
-          const renderedArticle = ReactDOMServer.renderToString(ArticleComponent);
-          // fs.writeFileSync(`./output/policy${xpath}`,  renderedArticle);
-          callback(null,  renderedArticle);
-        }))
-        .pipe(ext_replace('.html'))
-        .pipe(gulp.dest("temp/policy"))
-    }))
-  done();
-}
-
-
+// Copy media files
 function copyMedia() {
   return gulp.src('src/media/**/*')
     .pipe(gulp.dest('output/media'));
 }
 
-
-// Function to recursively delete directories, skipping the .git directory
-function clean() {
-  return gulp.src([
-    'output/**/*.html','temp/**/*.html',
-    'output/**/*.xml','temp/**/*.xml',
-    'output/**/*.tsx','temp/**/*.tsx',
-    'output/**/*.jsx','temp/**/*.jsx',
-    'output/**/*.html','temp/**/*.html',
-    'output/**/*.css','temp/**/*.css',
-    'output/**/*.png','temp/**/*.png',
-    'output/**/*.svg','temp/**/*.svg',
-], { read: false })
-  .pipe(rimraf());
-}
-
-function mkdir(done) {
-  fs.mkdirSync('./output', { recursive: true });
-  fs.mkdirSync('./temp', { recursive: true });
-  done();
-}
-
-
+// Copy assets to the output directory
 function copyToOutput() {
   return gulp.src(['temp/**/*', "src/*.txt"])
     .pipe(gulp.dest('output/'));
 }
-
+// Generate sitemap
 function buildPlainSiteMap(cb) {
   try {
-    // Create the sitemap directory if it doesn't exist
     fs.mkdirSync('./output/sitemap', { recursive: true });
 
     const sms = new SitemapAndIndexStream({
       getSitemapStream: (i) => {
-        const sitemapStream = new SitemapStream({ hostname: 'https://ukpirate.party/' });
+        const sitemapStream = new SitemapStream({ hostname: domain });
         const path = `./output/sitemap/sitemap-${i}.xml`;
-        console.log(path);
-        // Create a write stream to the sitemap file
+    
         const ws = sitemapStream.pipe(createWriteStream(resolve(path)));
-
-        // Handle stream errors
         ws.on('error', (err) => {
           console.error(`Error writing sitemap ${path}: ${err.message}`);
-          // Optionally, you can emit an event to handle this error outside this function
         });
-
-        return [new URL(path, 'https://ukpirate.party/').toString(), sitemapStream, ws];
+    
+        // Correct the URL construction
+        return [new URL(path, domain).toString(), sitemapStream, ws];
       },
     });
-    sitemap_list.forEach(item => sms.write(item));
+    
+    sitemapList.forEach(item => sms.write(item));
     sms.end();
     cb();
   } catch (err) {
     console.error('Error building sitemap:', err);
-    // Optionally, you can throw the error or handle it differently based on your application's requirements
+    cb(err);
   }
 }
-function copyjs(done) {
-  return gulp.src('src/js/**/*')
-    .pipe(gulp.dest('temp/js'));
-}
-function ejsTemaplate(html,jsx){
-}
 
+exports.default = gulp.series(
+  clean,
+  mkdir,
+  copyMedia,
+  buildStaticPage,
+  generateArticlePages,
+  generateArticles,
+  copyStyles,
+  autoInline,
+  copyToOutput,
+  buildPlainSiteMap
+);
 
-exports.default = gulp.series(clean, copyMedia, mkdir,copyjs, buildStaticPage, generateArticlePages, generatePolicy, copyJsx, generateArticles, copyStyles, copycss, autoInline, copyToOutput,buildPlainSiteMap);
 exports.clean = clean;
 exports.mkdir = mkdir;

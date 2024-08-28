@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
 
 const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -30,9 +30,11 @@ const Header = () => {
             <Nav.Link href="/policy/readme.html">Policy</Nav.Link>
             {/* Additional Nav Links can go here */}
           </Nav>
-          <div className="text-end">
-            <div id="userStatusContainer">HI</div>
-          </div>
+          <Nav className="text-end">
+            <Nav.Link href="https://members.ukpirate.party/">
+              Member Zone
+            </Nav.Link>
+          </Nav>
         {/* </Navbar.Collapse> */}
       </Container>
     </Navbar>
