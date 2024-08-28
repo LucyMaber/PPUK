@@ -6,6 +6,6 @@
     path = policy
     url = https://github.com/pirate-party-uk/policy.git
 
-[submodule "pirate-party-uk.github.io"]
-    path = pirate-party-uk.github.io
+[submodule "output"]
+    path = output
     url = https://github.com/pirate-party-uk/pirate-party-uk.github.io.git
