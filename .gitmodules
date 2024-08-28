@@ -9,3 +9,7 @@
 [submodule "output"]
     path = output
     url = https://github.com/pirate-party-uk/pirate-party-uk.git
+
+[submodule "articles"]
+    path = articles
+    url = https://github.com/pirate-party-uk/articles.git
