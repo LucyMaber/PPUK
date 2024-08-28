@@ -94,12 +94,29 @@ function requireFromString(src, filename) {
 }
 var rimraf2 = require('rimraf');
 
+// Utility function to delete all contents except .git
+function cleanDirectoryExceptGit(dir) {
+  const files = fs.readdirSync(dir);
+
+  files.forEach((file) => {
+    if (file !== '.git') {
+      rimraf2.sync(path.join(dir, file));
+    }
+  });
+}
+
 // Clean task
 function clean(cb) {
-  rimraf2.sync('./output');
-  rimraf2.sync('./temp');
+  cleanDirectoryExceptGit('./output'); // Remove everything except '.git' in 'output'
+  rimraf2.sync('./temp'); // Remove everything in 'temp'
   cb();
 }
+
+// copy CNAME
+function copy_cname(done){
+  return gulp.src("src/CNAME").pipe(gulp.dest("output/"));
+}
+
 
 // Create necessary directories
 function mkdir(done) {
@@ -302,6 +319,7 @@ exports.default = gulp.series(
   generateArticlePages,
   generateArticles,
   copyStyles,
+  copy_cname,
   autoInline,
   copyToOutput,
   buildPlainSiteMap

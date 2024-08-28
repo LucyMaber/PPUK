@@ -24,6 +24,7 @@ jobs:
     - name: Build the website
       run: npm run build # Ensure you have a build script in your package.json that runs your gulp tasks
 
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
