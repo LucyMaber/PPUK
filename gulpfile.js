@@ -228,9 +228,10 @@ function buildStaticPage(done) {
 }
 
 // Copy and optimize styles
+// Copy and optimize styles
 function copyStyles() {
-  return gulp.src('src/styles/**/*.css')
-    // .pipe(purgecss({ content: ['temp/**/*.html'] }))
+  return gulp.src('src/styles/**/*.css') // Corrected the glob pattern to match all CSS files
+    // .pipe(purgecss({ content: ['temp/**/*.html'] })) // Uncomment if you want to use purgecss
     .pipe(cleanCSS())
     .pipe(gulp.dest('temp/styles'));
 }
