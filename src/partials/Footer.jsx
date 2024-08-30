@@ -31,6 +31,9 @@ const Footer = () => {
             <a href="/privacy-policy.html" className="text-light me-3" title="Privacy Policy">
               Privacy Policy
             </a>
+            <a href="/TermsAndConditionsPage.html" className="text-light me-3" title="Terms And Conditions">
+            Terms And Conditions
+            </a>
           </Col>
         </Row>
       </Container>
