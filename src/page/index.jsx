@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Card } from "react-bootstrap";
-import BodyPage from "./partials/BodyPage";
+import BodyPage from "../partials/BodyPage";
 import { Discord } from 'react-bootstrap-icons';
 import ReactDOM from 'react-dom';
 

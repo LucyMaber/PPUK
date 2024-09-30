@@ -11,5 +11,5 @@
     url = https://github.com/pirate-party-uk/pirate-party-uk.git
 
 [submodule "articles"]
-    path = articles
+    path = etc/articles
     url = https://github.com/pirate-party-uk/articles.git

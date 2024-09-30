@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Supabase GitHub Login</title>
+  <!-- Include the Supabase JavaScript library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <!-- Login Button -->
+  <button id="login-button">Log in with GitHub</button>
+
+  <!-- Logout Button -->
+  <button id="logout-button" style="display: none;">Log out</button>
+
+  <!-- Display User Information -->
+  <div id="user-info" style="display: none;">
+    <h2>Welcome, <span id="user-name"></span>!</h2>
+    <img id="user-avatar" src="" alt="User Avatar" width="100">
+  </div>
+
+  <script>
+    // Initialize Supabase
+    const supabaseUrl = 'https://fawiybvgqensadqhqkka.supabase.co'; // Replace with your Supabase URL
+    const supabaseKey = 'YOUR_ANON_KEY'; // Replace with your anon key
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Get references to HTML elements
+    const loginButton = document.getElementById('login-button');
+    const logoutButton = document.getElementById('logout-button');
+    const userInfo = document.getElementById('user-info');
+    const userName = document.getElementById('user-name');
+    const userAvatar = document.getElementById('user-avatar');
+
+    // Function to update UI based on authentication state
+    function updateAuthUI(user) {
+      if (user) {
+        // User is signed in
+        loginButton.style.display = 'none';
+        logoutButton.style.display = 'inline-block';
+        userInfo.style.display = 'block';
+        userName.textContent = user.user_metadata.full_name || user.email;
+        userAvatar.src = user.user_metadata.avatar_url;
+      } else {
+        // User is signed out
+        loginButton.style.display = 'inline-block';
+        logoutButton.style.display = 'none';
+        userInfo.style.display = 'none';
+        userName.textContent = '';
+        userAvatar.src = '';
+      }
+    }
+
+    // Check initial authentication state
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      updateAuthUI(session ? session.user : null);
+    });
+
+    // Handle authentication state changes
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      updateAuthUI(session ? session.user : null);
+    });
+
+    // GitHub Login Function
+    loginButton.addEventListener('click', async () => {
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'github',
+      });
+      if (error) console.error('Error during sign in:', error.message);
+    });
+
+    // Logout Function
+    logoutButton.addEventListener('click', async () => {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) {
+        console.error('Error during sign out:', error.message);
+      } else {
+        updateAuthUI(null);
+      }
+    });
+  </script>
+</body>
+</html>
