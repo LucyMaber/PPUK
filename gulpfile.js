@@ -238,11 +238,15 @@ function compileMarkdownDir(markdownsDir, outputDir, pageComponent) {
         markdownFiles.map((file) => {
           return new Promise((innerResolve, innerReject) => {
             const relativeFilePath = path.relative(markdownsDir_, file);
+            const content = fs.readFileSync(file, 'utf8');
+            const value = matter(content);
+            const { data, content: markdownContent } = value;
             const fileName = path.basename(file, '.md');
             const outputFileName = relativeFilePath.replace(/\.md$/, '.html');
-            const content = fs.readFileSync(file, 'utf8');
-            const { data, content: markdownContent } = matter(content); // Parse front matter and markdown content
-            const htmlContent = md.render(markdownContent); // Convert markdown to HTML
+            let htmlContent = md.render(markdownContent); // Convert markdown to HTML
+
+            // Replace .md links with .html in the generated HTML
+            htmlContent = htmlContent.replace(/href="([^"]+)\.md"/g, 'href="$1.html"');
 
             try {
               const compiledFileName = path.join(tempDir, `${pageComponentName}.js`);
@@ -252,9 +256,6 @@ function compileMarkdownDir(markdownsDir, outputDir, pageComponent) {
 
               // Use the default export if it exists, otherwise fallback to the module itself
               const component = componentModule.default || componentModule;
-
-              console.log(`Type of component: ${typeof component}`);
-
               if (!component || (typeof component !== 'function' && typeof component !== 'object')) {
                 throw new Error(`Invalid component in ${compiledFileName}`);
               }
@@ -326,9 +327,15 @@ async function processPagesForType(type, pageComponent, listComponent = null) {
     const ext = path.extname(file);
     if (ext === '.md') {
       const fileName = path.basename(file, ext);
-      const content = fs.readFileSync(path.join(dir, file), 'utf8');
+      const file2 = path.join(dir, file);
+      const content = fs.readFileSync(file2, 'utf8');
       const { data, content: markdownContent } = matter(content); // Parse front matter and content
-      const htmlContent = md.render(markdownContent); // Convert markdown to HTML
+      console.log("file->",file2,"data->",data)
+      let htmlContent = md.render(markdownContent); // Convert markdown to HTML
+
+      // Replace .md links with .html in the generated HTML
+      htmlContent = htmlContent.replace(/href="([^"]+)\.md"/g, 'href="$1.html"');
+
       articles.push({ data: { ...data, slug: fileName }, content: htmlContent, fileName });
     }
   });
@@ -414,8 +421,9 @@ async function processPagesForType(type, pageComponent, listComponent = null) {
         try {
           const component = requireFromString(articleJSXContent, file.path);
           for (const article of articles) {
+            console.log("article_data->",article)
             const html = ReactDOMServer.renderToStaticMarkup(
-              React.createElement(component.default || component, { article })
+              React.createElement(component.default || component, {  article  })
             );
             const outputPath = path.join(outputDir, `${article.fileName}.html`);
 

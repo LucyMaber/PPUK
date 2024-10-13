@@ -26,7 +26,7 @@ const ArticleListPage = ({ articles, pageNo, totalPages }) => {
                 <Card.Body>
                   <Card.Title>{data.title}</Card.Title>
                   <Card.Text>{data.summary}</Card.Text>
-                  <Button variant="primary" href={`/article/${data.slug}.html`}>
+                  <Button variant="primary" href={`/articles/${data.slug}.html`}>
                     Read More
                   </Button>
                 </Card.Body>
@@ -39,7 +39,7 @@ const ArticleListPage = ({ articles, pageNo, totalPages }) => {
           {pageNo > 0 && (
             <Button
               variant="outline-primary"
-              href={`/article/page-${pageNo - 1}.html`}
+              href={`/articles/page/${pageNo - 1}.html`}
               className="mr-2"
             >
               Previous
@@ -48,7 +48,7 @@ const ArticleListPage = ({ articles, pageNo, totalPages }) => {
           {pageNo < totalPages - 1 && (
             <Button
               variant="outline-primary"
-              href={`/article/page-${pageNo + 1}.html`}
+              href={`/articles/page/${pageNo + 1}.html`}
               className="ml-2"
             >
               Next

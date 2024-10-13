@@ -4,12 +4,35 @@ import BodyPage from "../partials/BodyPage";
 
 const ArticlePage = ({ article }) => {
   // Destructure article object
-  const { title, description, summary, author, datePublished, htmlContent, imageUrl, id } = article || {};
+  const { data, content = "<p>No content available</p>" } = article || {};
+  const {
+    title,
+    summary,
+    author = [],
+    contributor = [],
+    datePublished,
+    imageUrl,
+    imageAlt,
+    description,
+    id
+  } = data || {};
 
   // Function to format date
   const formatDate = (dateString) => {
+    if (!dateString) return "Date not available";
     const date = new Date(dateString);
     return date.toDateString();
+  };
+
+  // Function to render authors and contributors
+  const renderPeople = (people) => {
+    if (!Array.isArray(people)) {
+      // Handle the case where `people` is a single object or string
+      return <span>{people.name || people}</span>;
+    }
+    return people.map((person, index) => (
+      <span key={index}>{person.name}{index < people.length - 1 ? ', ' : ''}</span>
+    ));
   };
 
   return (
@@ -18,21 +41,29 @@ const ArticlePage = ({ article }) => {
       description={"Welcome to the Pirate Party UK"}
       header={
         <>
-          {/* Use optional chaining to avoid errors if article is null */}
           <meta property="og:title" content={title} />
           {description && <meta property="og:description" content={description} />}
           <meta property="og:type" content="article" />
-          <meta property="og:url" content={`https://example.com/articles/${id}`} />
+          {id && <meta property="og:url" content={`https://example.com/articles/${id}`} />}
+          {imageUrl && <meta property="og:image" content={imageUrl} />}
           <script type="application/ld+json">
             {JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Article",
               headline: title,
               description: description,
-              author: {
-                "@type": "Person",
-                name: author,
-              },
+              author: Array.isArray(author)
+                ? author.map((person) => ({
+                    "@type": "Person",
+                    name: person.name,
+                  }))
+                : { "@type": "Person", name: author.name || author },
+              contributor: Array.isArray(contributor)
+                ? contributor.map((person) => ({
+                    "@type": "Person",
+                    name: person.name,
+                  }))
+                : { "@type": "Person", name: contributor.name || contributor },
               datePublished: datePublished,
               image: imageUrl,
               publisher: {
@@ -48,19 +79,27 @@ const ArticlePage = ({ article }) => {
         </>
       }
     >
-      {/* Use Container for main content */}
       <Container>
         <Row className="justify-content-center">
-          {/* Use Col to control content width */}
           <Col lg={8}>
             <article>
               {/* Render article title */}
               <h1 className="entry-title">{title}</h1>
               {/* Render article summary if available */}
               {summary && <p className="summary text-muted">{summary}</p>}
-              {/* Render author and publication date */}
+              {/* Render authors and contributors */}
               <div className="dateline">
-                by <span itemProp="name">{author}</span>
+                {author.length > 0 && (
+                  <>
+                    by <span itemProp="name">{renderPeople(author)}</span>
+                  </>
+                )}
+                {contributor && (
+                  <>
+                    <br />
+                    Contributors: <span itemProp="contributor">{renderPeople(contributor)}</span>
+                  </>
+                )}
                 <p>
                   <time itemProp="datePublished" dateTime={datePublished}>
                     published {formatDate(datePublished)}
@@ -68,7 +107,7 @@ const ArticlePage = ({ article }) => {
                 </p>
               </div>
               {/* Render HTML content dangerously (ensure HTML is safe) */}
-              <div className="entry-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+              <div className="entry-content" dangerouslySetInnerHTML={{ __html: content }} />
             </article>
           </Col>
         </Row>
