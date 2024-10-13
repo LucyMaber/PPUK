@@ -186,7 +186,6 @@ function compileMarkdownDir(markdownsDir, outputDir, pageComponent) {
     const entryPoints = {
       [pageComponentName]: path.resolve(__dirname, pageComponentPath),
     };
-    console.log("Entry point ->", entryPoints[pageComponentName], fs.existsSync(entryPoints[pageComponentName]));
 
     if (!fs.existsSync(entryPoints[pageComponentName])) {
       console.warn(`Page component '${pageComponent}' not found.`);
@@ -252,7 +251,6 @@ function compileMarkdownDir(markdownsDir, outputDir, pageComponent) {
               const compiledFileName = path.join(tempDir, `${pageComponentName}.js`);
               const componentModule = require(compiledFileName);
 
-              console.log(`componentModule keys: ${Object.keys(componentModule)}`);
 
               // Use the default export if it exists, otherwise fallback to the module itself
               const component = componentModule.default || componentModule;
@@ -268,7 +266,6 @@ function compileMarkdownDir(markdownsDir, outputDir, pageComponent) {
               const htmlOutputFileName = path.join(fullOutputDir, outputFileName);
               fs.mkdirSync(path.dirname(htmlOutputFileName), { recursive: true });
               fs.writeFileSync(htmlOutputFileName, html);
-              console.log(`Generated HTML file for '${fileName}': ${htmlOutputFileName}`);
 
               innerResolve();
             } catch (renderErr) {
@@ -314,7 +311,6 @@ async function processPagesForType(type, pageComponent, listComponent = null) {
   fs.mkdirSync(tempDir, { recursive: true });
   fs.mkdirSync(outputDir, { recursive: true });
 
-  console.log(`Processing type: ${type}`);
 
   const filesInSrcDir = fs.readdirSync(dir);
   const articles = [];
@@ -330,7 +326,6 @@ async function processPagesForType(type, pageComponent, listComponent = null) {
       const file2 = path.join(dir, file);
       const content = fs.readFileSync(file2, 'utf8');
       const { data, content: markdownContent } = matter(content); // Parse front matter and content
-      console.log("file->",file2,"data->",data)
       let htmlContent = md.render(markdownContent); // Convert markdown to HTML
 
       // Replace .md links with .html in the generated HTML
@@ -421,7 +416,6 @@ async function processPagesForType(type, pageComponent, listComponent = null) {
         try {
           const component = requireFromString(articleJSXContent, file.path);
           for (const article of articles) {
-            console.log("article_data->",article)
             const html = ReactDOMServer.renderToStaticMarkup(
               React.createElement(component.default || component, {  article  })
             );
@@ -456,7 +450,6 @@ async function buildContentPages(done) {
       )
     );
 
-    console.log('All page types generated successfully.');
     done(); // Signal task completion
   } catch (error) {
     console.error(`Error generating pages: ${error.message}`);
@@ -515,7 +508,6 @@ function buildStaticPagesSSR() {
         return;
       }
 
-      console.log("Webpack SSR compilation completed.");
 
       try {
         for (const pageName of Object.keys(entryPoints)) {
@@ -528,7 +520,6 @@ function buildStaticPagesSSR() {
           const htmlFileName = path.join('output', `${pageName}.html`);
           fs.writeFileSync(htmlFileName, html);
 
-          console.log(`Generated HTML file: ${htmlFileName}`);
         }
 
         resolve();
