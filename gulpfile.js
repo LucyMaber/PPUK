@@ -630,7 +630,7 @@ async function buildPlainSiteMap() {
 
   return new Promise((resolve, reject) => {
     const sitemapStream = new SitemapStream({
-      hostname: 'https://yourwebsite.com/',
+      hostname: 'https://ukpirate.party/',
     });
 
     const writeStream = createWriteStream('./output/sitemap/sitemap.xml');
