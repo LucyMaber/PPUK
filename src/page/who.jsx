@@ -9,25 +9,10 @@ const teamMembers = [
     role: "Party Leader",
     description:
       "Lucy is the current leader of the Pirate Party UK. She is dedicated to promoting transparency, democracy, and digital rights while advocating for marginalized communities.",
-    email: "lucy@piratepartyuk.org",
-    discord: "https://discord.gg/t8EDRgXzMH",
-    twitter: "https://twitter.com/lucy_pirate",
     image: "/images/lucy.jpg",
     hobbies: "Cycling, Open-source Development, Reading Sci-Fi",
     expertise: "Digital Rights, Policy Development, Community Engagement"
-  },
-  {
-    name: "Alex Johnson",
-    role: "Head of Communications",
-    description:
-      "Alex manages our communications team and works tirelessly to ensure our message reaches the public effectively.",
-    email: "alex@piratepartyuk.org",
-    discord: "https://discord.gg/xxxxxxx",
-    twitter: "https://twitter.com/alex_pirate",
-    image: "/images/alex.jpg",
-    hobbies: "Photography, Blogging, Traveling",
-    expertise: "Media Relations, Social Media Strategy, Public Speaking"
-  },
+  }
   // Add more team members as needed
 ];
 

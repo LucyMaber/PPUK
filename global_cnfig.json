@@ -4,6 +4,12 @@
             "type": "articles",
             "pageComponent": "article/ArticlePage.jsx",
             "listComponent": "article/ArticleListPage.jsx"
+        },
+
+        {
+            "type": "profile",
+            "pageComponent": "profile/Pofile.jsx",
+            "listComponent": "profile/WhoWeAre.jsx"
         }
     ],
     "ContentFromMarkdownTask": [
