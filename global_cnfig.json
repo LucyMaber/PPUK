@@ -1,33 +1,34 @@
 {
-    "ContentPagesTask": [
-        {
-            "type": "articles",
-            "pageComponent": "article/ArticlePage.jsx",
-            "listComponent": "article/ArticleListPage.jsx"
-        },
-
-        {
-            "type": "profile",
-            "pageComponent": "profile/Pofile.jsx",
-            "listComponent": "profile/WhoWeAre.jsx"
-        }
+    "ContentPagesTask":[
+       {
+          "type":"articles",
+          "pageComponent":"article/ArticlePage.jsx",
+          "listComponent":"article/ArticleListPage.jsx"
+       },
+       {
+          "type":"profile",
+          "pageComponent":"profile/Pofile.jsx",
+          "listComponent":"profile/WhoWeAre.jsx"
+       }
     ],
-    "ContentFromMarkdownTask": [
-        {
-            "markdownsDir": "etc/policy",
-            "outputDir": "output/policy",
-            "pageComponent": "policy/PolicyPage.jsx"
-        },
-        {
-            "markdownsDir": "etc/rule",
-            "outputDir": "output/rule",
-            "pageComponent": "rule/RulePage.jsx"
-        },
-        {
-            "markdownsDir": "etc/minutes",
-            "outputDir": "output/minutes",
-            "pageComponent": "minutes/MinutesPage.jsx"
-        }
+    "ContentFromMarkdownTask":[
+       {
+          "markdownsDir":"etc/policy",
+          "outputDir":"output/policy",
+          "pageComponent":"policy/PolicyPage.jsx"
+       },
+       {
+          "markdownsDir":"etc/rule",
+          "outputDir":"output/rule",
+          "pageComponent":"rule/RulePage.jsx"
+       },
+       {
+          "markdownsDir":"etc/minutes",
+          "outputDir":"output/minutes",
+          "pageComponent":"minutes/MinutesPage.jsx"
+       }
     ],
-    "Organisation": {}
-}
+    "Organisation":{
+       
+    }
+ }

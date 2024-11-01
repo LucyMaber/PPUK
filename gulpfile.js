@@ -266,12 +266,12 @@ function compileMarkdownDir(markdownsDir, outputDir, pageComponent) {
               const htmlOutputFileName = path.join(fullOutputDir, outputFileName);
               fs.mkdirSync(path.dirname(htmlOutputFileName), { recursive: true });
               fs.writeFileSync(htmlOutputFileName, html);
-
               innerResolve();
             } catch (renderErr) {
               console.error(`Error rendering component for '${fileName}' to HTML:`, renderErr);
               innerReject(renderErr);
             }
+          
           });
         })
       )
@@ -301,7 +301,7 @@ function compileContentFromMarkdown(done) {
 }
 
 // Helper function to process pages for a specific type
-async function processPagesForType(type, pageComponent, listComponent = null) {
+async function processPagesForType(type, pageComponent, listComponent = null,ARTICLES_PER_PAGE=10) {
   const dir = `etc/${type}`;
   const tempDir = `temp/${type}`;
   const outputDir = `output/${type}`;
@@ -445,8 +445,8 @@ async function buildContentPages(done) {
 
     // Iterate over each type and process pages
     await Promise.all(
-      pageTypes.map(({ type, pageComponent, listComponent }) =>
-        processPagesForType(type, pageComponent, listComponent)
+      pageTypes.map(({ type, pageComponent, listComponent ,ARTICLES_PER_PAGE =10}) =>
+        processPagesForType(type, pageComponent, listComponent,ARTICLES_PER_PAGE)
       )
     );
 
