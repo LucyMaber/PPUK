@@ -36,7 +36,7 @@ const ArticleListPage = ({ articles, pageNo, totalPages }) => {
         </div>
         {/* Pagination Buttons */}
         <div className="pagination-buttons mt-4">
-          {pageNo > 0 && (
+          {
             <Button
               variant="outline-primary"
               href={`/articles/page/${pageNo - 1}.html`}
@@ -44,8 +44,8 @@ const ArticleListPage = ({ articles, pageNo, totalPages }) => {
             >
               Previous
             </Button>
-          )}
-          {pageNo < totalPages - 1 && (
+            }
+          {
             <Button
               variant="outline-primary"
               href={`/articles/page/${pageNo + 1}.html`}
@@ -53,7 +53,7 @@ const ArticleListPage = ({ articles, pageNo, totalPages }) => {
             >
               Next
             </Button>
-          )}
+          }
         </div>
       </div>
     </BodyPage>

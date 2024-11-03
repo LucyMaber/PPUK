@@ -5,7 +5,6 @@ import { EnvelopeFill, Discord, Twitter } from "react-bootstrap-icons";
 import BodyPage from "../partials/BodyPage";
 
 function WhoWeAre({ articles }) {
-  console.log("teamMembers->", articles);
 
   return (
     <BodyPage

@@ -1,0 +1,166 @@
+Html Webpack Plugin:
+<pre>
+  Error: Child compilation failed:
+  Module not found: Error: Can't resolve '/home/lucy/Code/website/src/templates/index.html' in '/home/lucy/Code/website'
+  ModuleNotFoundError: Module not found: Error: Can't resolve '/home/lucy/Code/website/src/templates/index.html' in '/home/lucy/Code/web  site'
+      at /home/lucy/Code/website/node_modules/webpack/lib/Compilation.js:2109:28
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:908:13
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:10:1)
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:333:22
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:9:1)
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:512:22
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:150:10
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:775:25
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:992:8
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:1121:5
+      at /home/lucy/Code/website/node_modules/neo-async/async.js:6883:13
+      at /home/lucy/Code/website/node_modules/webpack/lib/NormalModuleFactory.js:1104:45
+      at finishWithoutResolve (/home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:567:11)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:656:15
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:16:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:27:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/DescriptionFilePlugin.js:89:43
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:15:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:16:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:16:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:27:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/DescriptionFilePlugin.js:89:43
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:16:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/Resolver.js:718:5
+      at eval (eval at create (/home/lucy/Code/website/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:15:1)
+      at /home/lucy/Code/website/node_modules/enhanced-resolve/lib/DirectoryExistsPlugin.js:41:15
+      at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+  
+  - Compilation.js:2109 
+    [website]/[webpack]/lib/Compilation.js:2109:28
+  
+  - NormalModuleFactory.js:908 
+    [website]/[webpack]/lib/NormalModuleFactory.js:908:13
+  
+  
+  - NormalModuleFactory.js:333 
+    [website]/[webpack]/lib/NormalModuleFactory.js:333:22
+  
+  
+  - NormalModuleFactory.js:512 
+    [website]/[webpack]/lib/NormalModuleFactory.js:512:22
+  
+  - NormalModuleFactory.js:150 
+    [website]/[webpack]/lib/NormalModuleFactory.js:150:10
+  
+  - NormalModuleFactory.js:775 
+    [website]/[webpack]/lib/NormalModuleFactory.js:775:25
+  
+  - NormalModuleFactory.js:992 
+    [website]/[webpack]/lib/NormalModuleFactory.js:992:8
+  
+  - NormalModuleFactory.js:1121 
+    [website]/[webpack]/lib/NormalModuleFactory.js:1121:5
+  
+  - async.js:6883 
+    [website]/[neo-async]/async.js:6883:13
+  
+  - NormalModuleFactory.js:1104 
+    [website]/[webpack]/lib/NormalModuleFactory.js:1104:45
+  
+  - Resolver.js:567 finishWithoutResolve
+    [website]/[enhanced-resolve]/lib/Resolver.js:567:11
+  
+  - Resolver.js:656 
+    [website]/[enhanced-resolve]/lib/Resolver.js:656:15
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - DescriptionFilePlugin.js:89 
+    [website]/[enhanced-resolve]/lib/DescriptionFilePlugin.js:89:43
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - DescriptionFilePlugin.js:89 
+    [website]/[enhanced-resolve]/lib/DescriptionFilePlugin.js:89:43
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - Resolver.js:718 
+    [website]/[enhanced-resolve]/lib/Resolver.js:718:5
+  
+  
+  - DirectoryExistsPlugin.js:41 
+    [website]/[enhanced-resolve]/lib/DirectoryExistsPlugin.js:41:15
+  
+  - task_queues:81 process.processTicksAndRejections
+    node:internal/process/task_queues:81:21
+  
+  - child-compiler.js:174 
+    [website]/[html-webpack-plugin]/lib/child-compiler.js:174:18
+  
+  - Compiler.js:627 finalCallback
+    [website]/[webpack]/lib/Compiler.js:627:5
+  
+  - Compiler.js:662 
+    [website]/[webpack]/lib/Compiler.js:662:11
+  
+  - Compiler.js:1348 
+    [website]/[webpack]/lib/Compiler.js:1348:17
+  
+  
+  - Hook.js:18 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [website]/[tapable]/lib/Hook.js:18:14
+  
+  - Compiler.js:1344 
+    [website]/[webpack]/lib/Compiler.js:1344:33
+  
+  - Compilation.js:2925 finalCallback
+    [website]/[webpack]/lib/Compilation.js:2925:11
+  
+  - Compilation.js:3238 
+    [website]/[webpack]/lib/Compilation.js:3238:11
+  
+  
+  - Hook.js:18 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [website]/[tapable]/lib/Hook.js:18:14
+  
+  - Compilation.js:3231 
+    [website]/[webpack]/lib/Compilation.js:3231:38
+  
+  
+  - Compilation.js:505 fn
+    [website]/[webpack]/lib/Compilation.js:505:9
+  
+  
+  - Hook.js:18 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [website]/[tapable]/lib/Hook.js:18:14
+  
+  - Compilation.js:3201 cont
+    [website]/[webpack]/lib/Compilation.js:3201:34
+  
+</pre><script defer src="dist/RulePage.bundle.js"></script>

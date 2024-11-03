@@ -5,16 +5,18 @@ import BodyPage from "../partials/BodyPage";
 const ArticlePage = ({ article }) => {
   // Destructure article object
   const { data, content = "<p>No content available</p>" } = article || {};
+  console.log("Content:", content); // Ensure content is defined and correct
   const {
     title,
     summary,
     author = [],
     contributor = [],
-    datePublished,
+    publishDate,
     imageUrl,
-    imageAlt,
+    imageAlt = "Image",
     description,
-    id
+    id,
+    keywords = []
   } = data || {};
 
   // Function to format date
@@ -27,18 +29,17 @@ const ArticlePage = ({ article }) => {
   // Function to render authors and contributors
   const renderPeople = (people) => {
     if (!Array.isArray(people)) {
-      // Handle the case where `people` is a single object or string
       return <span>{people.name || people}</span>;
     }
     return people.map((person, index) => (
-      <span key={index}>{person.name}{index < people.length - 1 ? ', ' : ''}</span>
+      <span key={index}>{person.name || person}{index < people.length - 1 ? ', ' : ''}</span>
     ));
   };
 
   return (
     <BodyPage
-      title={"Home"}
-      description={"Welcome to the Pirate Party UK"}
+      title={title || "Home"}
+      description={description || "Welcome to the Pirate Party UK"}
       header={
         <>
           <meta property="og:title" content={title} />
@@ -55,16 +56,16 @@ const ArticlePage = ({ article }) => {
               author: Array.isArray(author)
                 ? author.map((person) => ({
                     "@type": "Person",
-                    name: person.name,
+                    name: person.name || person,
                   }))
                 : { "@type": "Person", name: author.name || author },
               contributor: Array.isArray(contributor)
                 ? contributor.map((person) => ({
                     "@type": "Person",
-                    name: person.name,
+                    name: person.name || person,
                   }))
                 : { "@type": "Person", name: contributor.name || contributor },
-              datePublished: datePublished,
+              datePublished: publishDate,
               image: imageUrl,
               publisher: {
                 "@type": "Organization",
@@ -74,6 +75,7 @@ const ArticlePage = ({ article }) => {
                   url: "/media/PPUK-logo.png",
                 },
               },
+              keywords: keywords.join(", "),
             })}
           </script>
         </>
@@ -94,20 +96,20 @@ const ArticlePage = ({ article }) => {
                     by <span itemProp="name">{renderPeople(author)}</span>
                   </>
                 )}
-                {contributor && (
+                {contributor.length > 0 && (
                   <>
                     <br />
                     Contributors: <span itemProp="contributor">{renderPeople(contributor)}</span>
                   </>
                 )}
                 <p>
-                  <time itemProp="datePublished" dateTime={datePublished}>
-                    published {formatDate(datePublished)}
+                  <time itemProp="datePublished" dateTime={publishDate}>
+                    published {formatDate(publishDate)}
                   </time>
                 </p>
               </div>
-              {/* Render HTML content dangerously (ensure HTML is safe) */}
-              <div className="entry-content" dangerouslySetInnerHTML={{ __html: content }} />
+              {/* Render HTML content dangerously */}
+              <div className="entry-content" dangerouslySetInnerHTML={{ __html: content || "<p>No content available</p>" }} />
             </article>
           </Col>
         </Row>

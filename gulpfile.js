@@ -26,7 +26,8 @@ const ARTICLES_PER_PAGE = 10;
 const sitemapList = [];
 
 // Common Webpack configuration
-const commonWebpackConfig = {
+const commonWebpackConfig = {watch: false,
+  watch: false,
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   resolve: {
     extensions: ['.jsx', '.tsx', '.js', '.ts'],
@@ -92,7 +93,6 @@ const clientWebpackConfig = {
   target: 'web',
   entry: {
     app: path.resolve(__dirname, 'src/client/index.jsx'),
-    TransphobiaAssessment: path.resolve(__dirname, 'src/client/TransphobiaAssessment.jsx'),
   },
   output: {
     path: path.resolve(__dirname, 'output/js'),
@@ -179,7 +179,6 @@ function compileMarkdownDir(markdownsDir, outputDir, pageComponent) {
     // Ensure the necessary directories exist
     fs.mkdirSync(tempDir, { recursive: true });
     fs.mkdirSync(fullOutputDir, { recursive: true });
-    console.log("Markdowns dir ->", markdownsDir_, fs.existsSync(markdownsDir_));
 
     const pageComponentPath = `src/${pageComponent}`;
     const pageComponentName = path.basename(pageComponent, path.extname(pageComponent));
@@ -334,7 +333,8 @@ async function processPagesForType(type, pageComponent, listComponent = null,ART
       articles.push({ data: { ...data, slug: fileName }, content: htmlContent, fileName });
     }
   });
-
+  // sort articles by date
+  articles.sort((a, b) =>  new Date(a.data.date) -  new Date(b.data.date));
   // Ensure totalPages and pageNumbers are defined even if there are no articles
   const totalPages = Math.max(Math.ceil(articles.length / ARTICLES_PER_PAGE), 1);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -675,10 +675,10 @@ const build = gulp.series(
   compileContentFromMarkdown,
   copyData,
   buildStaticPagesSSR, // Server-side rendering
-  buildStaticPagesCSR, // Client-side rendering
+  // buildStaticPagesCSR, // Client-side rendering
   copyStyles,
   copyStylesJs,
-  autoInline,
+  // autoInline,
   buildPlainSiteMap
 );
 

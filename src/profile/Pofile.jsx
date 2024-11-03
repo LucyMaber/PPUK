@@ -133,4 +133,4 @@ ProfilePage.propTypes = {
   }).isRequired,
 };
 
-export default ProfilePage;
+export default ({  }) => <></>;
