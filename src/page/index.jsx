@@ -4,85 +4,85 @@ import BodyPage from "../partials/BodyPage";
 import { Discord } from 'react-bootstrap-icons';
 import ReactDOM from 'react-dom';
 
-function App() {
   return (
-    <BodyPage title={"Home"} description={"Welcome to the Pirate Party UK"}>
-      <Container className="pb-5 mb-5">
-        <div className="p-5 text-center bg-body-tertiary rounded-3">
-          <h1 className="text-body-emphasis">Pirate Party UK</h1>
-          <p className="col-lg-8 mx-auto fs-5 text-muted">
-            We believe in democracy, transparency, rights, and a free internet
-          </p>
-        </div>
-
-        <Card className="mb-3">
+    <BodyPage title={"Home Page"} description={"Get in touch with the Trans Advocacy and Complaint Collective UK"}>
+      <Container className="mt-4">
+        {/* Introduction Section */}
+        <Card className="mb-4">
           <Card.Body>
-            <Card.Title>Civil Liberties</Card.Title>
+            <Card.Title>Introducing the Trans Advocacy and Complaint Collective UK: Join Us in Making a Difference!</Card.Title>
+            <Card.Text>
+              Hello, everyone! We are excited to announce the launch of the Trans Advocacy and Complaint Collective UK—a new initiative dedicated to advocating for trans rights and addressing transphobia across the UK.
+            </Card.Text>
+            <Card.Text>
+              Our mission is to create a united front for trans people and allies to push back against discrimination, hold media accountable for transphobic content, and ensure that our voices are heard. Whether you’re passionate about activism, need support, or want to help make real change, there’s a place for you in our collective.
+            </Card.Text>
+          </Card.Body>
+        </Card>
+
+        {/* What We Offer Section */}
+        <Card className="mb-4">
+          <Card.Body>
+            <Card.Title>What We Offer</Card.Title>
             <Card.Text>
               <ul>
-                <li>We believe in protecting civil liberties, including:</li>
-                <ul>
-                  <li>Freedom of conscience</li>
-                  <li>Freedom of press</li>
-                  <li>Freedom of religion</li>
-                  <li>Freedom of expression</li>
-                  <li>Freedom of assembly</li>
-                </ul>
-                <li>These fundamental freedoms are essential to a free and open society.</li>
-                <li>However, these freedoms must be exercised responsibly and with respect for the rights of others.</li>
+                <li><strong>Organized Activism:</strong> We’re planning targeted actions, campaigns, and events to challenge transphobia and promote equality.</li>
+                <li><strong>FOI Requests:</strong> Join our efforts to obtain crucial information through Freedom of Information requests, shining a light on issues affecting the trans community.</li>
+                <li><strong>Media Complaints:</strong> Help us hold media outlets accountable for transphobic coverage by organizing and submitting well-structured complaints.</li>
+                <li><strong>Transphobic Events Documentation:</strong> A space to document and discuss incidents of transphobia, allowing us to respond collectively and effectively.</li>
+                <li><strong>GIC Advocacy:</strong> Work with us to address issues within Gender Identity Clinics, including long waiting times, inadequate care, and systemic barriers to accessing gender-affirming healthcare.</li>
+                <li><strong>Support and Community:</strong> A safe space for peer support, sharing resources, and celebrating trans joy.</li>
               </ul>
             </Card.Text>
           </Card.Body>
         </Card>
 
-        <Card className="mb-3">
+        {/* How You Can Get Involved Section */}
+        <Card className="mb-4">
           <Card.Body>
-            <Card.Title>LGBTQIA+ Rights</Card.Title>
+            <Card.Title>How You Can Get Involved</Card.Title>
             <Card.Text>
               <ul>
-                <li>We recognize the challenges faced by LGBTQIA+ individuals in our society.</li>
-                <li>At Pirate Party UK, we believe in equal rights and opportunities for all individuals, regardless of their sexual orientation or gender identity.</li>
-                <li>We are committed to advocating for LGBTQIA+ rights and ensuring that politicians understand and address these issues.</li>
-                <li>Everyone deserves to live free from discrimination and to be treated with dignity and respect.</li>
-                <li>Join us in our mission to create a more inclusive and equitable society for all.</li>
+                <li><strong>Join Our Discord:</strong> Our Discord server is the hub for all our activities. Whether you want to take part in specific actions or just connect with like-minded people, we’d love to have you.</li>
+                <li><strong>Share Your Ideas:</strong> We’re always looking for fresh ideas and perspectives. Your input can help shape the direction of our collective.</li>
+                <li><strong>Spread the Word:</strong> Even if you can’t join, spreading the word about our collective can help us reach more people who might be interested.</li>
               </ul>
+            </Card.Text>
+            <Button variant="primary" href="https://discord.com/invite/your-discord-link" className="me-2">
+              <Discord /> Join Our Discord
+            </Button>
+            <Button variant="secondary" href={`mailto:${email}`} className="me-2">
+              <Envelope /> Contact Us
+            </Button>
+          </Card.Body>
+        </Card>
+
+        {/* Closing Section */}
+        <Card className="mb-4">
+          <Card.Body>
+            <Card.Text>
+              This is a community-driven effort, and we believe that together, we can create meaningful change. Let’s work together to ensure that trans voices are amplified, respected, and heard across the UK.
+            </Card.Text>
+            <Card.Text>
+              Join us today and be a part of something powerful!
             </Card.Text>
           </Card.Body>
         </Card>
 
-        <Card className="mb-3">
-          <Card.Body>
-            <Card.Title>Digital Freedoms</Card.Title>
-            <Card.Text>
-              <ul>
-                <li>Online Privacy: Your personal data should be protected from unwarranted surveillance and misuse.</li>
-                <li>Net Neutrality: We support a free and open internet where all data is treated equally, without discrimination by ISPs.</li>
-                <li>Secure Communications: You should be able to communicate online securely without fear of eavesdropping or censorship.</li>
-                <li>Open Source Software: We advocate for the use of open source software to promote transparency and user control.</li>
-                <li>We work tirelessly to address issues related to digital rights and fight against legislation that threatens your online freedoms.</li>
-                <li>Join us in safeguarding the digital world for generations to come.</li>
-              </ul>
-            </Card.Text>
-          </Card.Body>
-        </Card>
-
-        <Card className="mb-3">
-          <Card.Body>
-            <Card.Title>Get Involved</Card.Title>
-            <Card.Text>
-              If you share our values and are interested in supporting the New UK Pirate Party, we welcome you to join us. You can connect with us on our Discord server and stay up to date with our latest news and events on our website.{" "}
-              <a
-                href="https://discord.gg/t8EDRgXzMH"
-                aria-label="Join us on Discord"
-              >
-                <Discord size={24} />
-              </a>
-            </Card.Text>
+        {/* Social Media Links */}
+        <Card className="mb-4">
+          <Card.Body className="text-center">
+            <Button variant="outline-primary" href="https://twitter.com/your-twitter-link" className="me-2">
+              <Twitter /> Twitter
+            </Button>
+            <Button variant="outline-primary" href="https://mastodon.social/@your-mastodon-link" className="me-2">
+              <Mastodon /> Mastodon
+            </Button>
           </Card.Body>
         </Card>
       </Container>
     </BodyPage>
   );
-}
+};
 
-export default App;
+export default HomePage;

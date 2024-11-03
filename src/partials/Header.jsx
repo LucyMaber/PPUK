@@ -6,22 +6,40 @@ const Header = () => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleNavbar = () => {
-    console.log("expanded",expanded);
     setExpanded(!expanded);
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="md" className="p-3 mb-3">
+    <Navbar
+      expand="md"
+      style={{
+        backgroundColor: "#121212", // Darker background color
+        borderBottom: "3px solid #3C9CD4", // Muted Trans Pride blue accent
+        padding: "16px",
+        color: "#E0E0E0", // Light gray color for text
+      }}
+      expanded={expanded}
+    >
       <Container>
-        <Navbar.Brand href="/" aria-label="Pirate Party Logo">
+        <Navbar.Brand href="/" aria-label="Trans Advocacy and Complaint Collective Logo">
           <img
-            src="/media/PP.svg"
+            src="/media/tacc.png" // Replace with an actual Trans-themed logo or image
             width="50"
-            alt="Pirate Party Logo"
+            alt="Trans Advocacy and Complaint Collective Logo"
+            style={{
+              borderRadius: "50%", // Rounded logo image
+            }}
           />
         </Navbar.Brand>
-        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggleNavbar} /> */}
-        {/* <Navbar.Collapse id="basic-navbar-nav" expanded={expanded}> */}
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          onClick={toggleNavbar}
+          aria-label="Toggle navigation"
+          style={{
+            borderColor: "#E0E0E0", // Light gray border for toggle
+          }}
+        />
+        <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/articles/page/0.html">Articles</Nav.Link>

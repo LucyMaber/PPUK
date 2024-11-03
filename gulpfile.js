@@ -508,6 +508,18 @@ function buildStaticPagesSSR() {
         return;
       }
 
+// Main task sequence
+exports.default = gulp.series(
+  clean,
+  mkdir,
+  copyMedia,
+  buildStaticPage,
+  generateArticlePages,
+  generatePressReleasePages, // New task added here
+  copyStyles,
+  autoInline,
+  buildPlainSiteMap
+);
 
       try {
         for (const pageName of Object.keys(entryPoints)) {

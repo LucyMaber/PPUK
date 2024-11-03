@@ -69,7 +69,7 @@ const ArticlePage = ({ article }) => {
               image: imageUrl,
               publisher: {
                 "@type": "Organization",
-                name: "Pirate Party UK (PPUK)",
+                name: "Trans Advocacy and Complaint Collective",
                 logo: {
                   "@type": "ImageObject",
                   url: "/media/PPUK-logo.png",
