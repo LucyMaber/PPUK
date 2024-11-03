@@ -4,7 +4,7 @@ import BodyPage from "partials/BodyPage";
 import ReactDOM from "react-dom";
 
 // Component for rendering a list of articles
-const ArticleListPage = ({ articles, pageNo, totalPages }) => {
+const ArticleListPage = ({ articles, currentPage, totalPages }) => {
   // Error handling for missing or invalid data
   if (!articles || !Array.isArray(articles) || articles.length === 0) {
     return (
@@ -36,19 +36,19 @@ const ArticleListPage = ({ articles, pageNo, totalPages }) => {
         </div>
         {/* Pagination Buttons */}
         <div className="pagination-buttons mt-4">
-          {pageNo > 0 && (
+          { (
             <Button
               variant="outline-primary"
-              href={`/articles/page/${pageNo - 1}.html`}
+              href={`/articles/page/${currentPage - 1}.html`}
               className="mr-2"
             >
               Previous
             </Button>
           )}
-          {pageNo < totalPages - 1 && (
+          {(
             <Button
               variant="outline-primary"
-              href={`/articles/page/${pageNo + 1}.html`}
+              href={`/articles/page/${currentPage + 1}.html`}
               className="ml-2"
             >
               Next

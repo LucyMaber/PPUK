@@ -10,7 +10,7 @@ const ArticlePage = ({ article }) => {
     summary,
     author = [],
     contributor = [],
-    datePublished,
+    publishDate,
     imageUrl,
     imageAlt,
     description,
@@ -64,7 +64,7 @@ const ArticlePage = ({ article }) => {
                     name: person.name,
                   }))
                 : { "@type": "Person", name: contributor.name || contributor },
-              datePublished: datePublished,
+              datePublished: publishDate,
               image: imageUrl,
               publisher: {
                 "@type": "Organization",
@@ -101,8 +101,8 @@ const ArticlePage = ({ article }) => {
                   </>
                 )}
                 <p>
-                  <time itemProp="datePublished" dateTime={datePublished}>
-                    published {formatDate(datePublished)}
+                  <time itemProp="datePublished" dateTime={publishDate}>
+                    published {formatDate(publishDate)}
                   </time>
                 </p>
               </div>
